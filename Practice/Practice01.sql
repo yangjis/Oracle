@@ -29,6 +29,7 @@ select first_name,
         salary
 from employees
 where commission_pct is null
+and manager_id is not null
 and salary > 3000;
 
 
