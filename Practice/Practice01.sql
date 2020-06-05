@@ -74,7 +74,7 @@ select first_name,
         salary
 from employees
 where first_name like '%S%'
-and first_name like '%s%';
+or first_name like '%s%';
 
 
 /*문제8.
