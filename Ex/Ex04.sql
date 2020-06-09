@@ -229,8 +229,8 @@ select e.employee_id,
         m.first_name,
         m.hire_date 
 from employees e, employees m
-where e.employee_id = m.manager_id
-and e.hire_date > m.hire_date;
+where e.manager_id = m.employee_id
+and e.hire_date < m.hire_date;
 
 /*문제6.
 나라별로 어떠한 부서들이 위치하고 있는지 파악하려고 합니다.
