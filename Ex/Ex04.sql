@@ -290,12 +290,8 @@ select e.employee_id,
         d.department_name,
         m.first_name manager
 from employees e, departments d, employees m
-where e.employee_id = m.manager_id
-and e.department_id = d.department_id;
-
-
-
-
+where e.manager_id = m.employee_id
+and e.department_id = d.department_id(+);
 
 
 
