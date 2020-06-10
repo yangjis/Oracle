@@ -84,8 +84,8 @@ select e.employee_id,
         m.first_name,
         m.hire_date 
 from employees e, employees m
-where e.employee_id = m.manager_id
-and e.hire_date > m.hire_date;
+where e.manager_id = m.employee_id
+and e.hire_date < m.hire_date;
 
 /*문제6.
 나라별로 어떠한 부서들이 위치하고 있는지 파악하려고 합니다.
@@ -111,10 +111,11 @@ job_history 테이블은 과거의 담당업무의 데이터를 가지고 있다
 (2건)*/
 select e.employee_id,
         e.first_name ||' '|| e. last_name,
-        e.job_id,
+        j.job_id,
         j.start_date,
         j.end_date
-from employees e, job_history j
+from employees e, 
+	 job_history j
 where e.employee_id = j.employee_id
 and j.job_id = 'AC_ACCOUNT';
 
@@ -129,11 +130,16 @@ select e.department_id,
         l.city,
         c.country_name,
         r.region_name
-from employees e,departments d, locations l, countries c, regions r
+from employees e,
+	 departments d, 
+	 locations l, 
+	 countries c, 
+	 regions r
 where e.employee_id = d.manager_id
 and d.location_id = l.location_id
 and l.country_id = c.country_id
-and c.region_id = r.region_id;
+and c.region_id = r.region_id
+order by d.department_id asc;
 
 /*문제9.
 각 사원(employee)에 대해서 사번(employee_id), 이름(first_name), 부서명(department_name), 
@@ -145,5 +151,5 @@ select e.employee_id,
         d.department_name,
         m.first_name manager
 from employees e, departments d, employees m
-where e.employee_id = m.manager_id
-and e.department_id = d.department_id;
+where e.manager_id = m.employee_id
+and e.department_id = d.department_id(+);
