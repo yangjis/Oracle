@@ -38,12 +38,12 @@ order by salary desc;
 매니저아이디, 매니저이름(first_name), 매니저별평균급여, 매니저별최소급여, 매니저별최대급여를 출력합니다.
 매니저별평균급여의 내림차순으로 정렬하고 매니저별평균급여는 소수점 첫째짜리에서 반올림 하여 출력합니다.
 (18건)*/
-select e.employee_id,
-        e.first_name,
-        round(m.mAvg,1) mAvg,
-        m.mMin,
-        m.mMax
-from employees e, (select manager_id, max(salary)mMax, avg(salary)mAvg, min(salary)mMin 
+select e.employee_id "매니저아이디",
+        e.first_name "매니저이름",
+        mAvg "매니저평균급여",
+        m.mMin "매니저최소급여",
+        m.mMax "매니저최대급여"
+from employees e, (select manager_id, max(salary)mMax, round(avg(salary),1) mAvg, min(salary)mMin 
                     from employees 
                     where hire_date >= '2005/01/01'
                     group by manager_id
