@@ -180,4 +180,3 @@ where j.job_id = e.job_id;
 select * from employees;
 
 
-
