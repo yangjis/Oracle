@@ -10,15 +10,17 @@ where salary < (select avg(salary)
 평균급여 이상, 최대급여 이하의 월급을 받는 사원의 
 직원번호(employee_id), 이름(first_name), 급여(salary), 평균급여, 최대급여를 급여의 오름차순으로 정렬하여 출력하세요 
 (51건)*/
-select employee_id,
-        first_name,
-        salary
-from employees
-where salary >= (select avg(salary)
-                from employees)
-and salary < (select max(salary)
-              from employees)
-order by salary asc;
+select e.employee_id "직원번호",
+        e.first_name "이름",
+        e.salary "급여",
+        a.aSalary "평균급여",
+        m.mSalary "최대급여"
+from employees e, 
+	 (select max(salary) mSalary from employees) m, 
+	 (select round(avg(salary),0) aSalary from employees) a
+where e.salary >= a.aSalary
+and e.salary <= m.mSalary
+order by e.salary asc;
 
 /*문제3.
 직원중 Steven(first_name) king(last_name)이 소속된 부서(departments)가 있는 곳의 주소를 알아보려고 한다.
