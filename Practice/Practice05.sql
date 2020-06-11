@@ -52,6 +52,7 @@ where e.employee_id = m.manager_id
 and m.mAvg >= 5000
 order by mAvg desc;
 
+
 /*
 문제4.
 각 사원(employee)에 대해서 사번(employee_id), 이름(first_name), 부서명(department_name), 
@@ -232,17 +233,18 @@ from(select rownum, region_name
     from (select  r.region_name region_name,
                   avg(e.salary) mSalary
           from employees e, 
-          departments d, 
-          locations l, 
-          countries c, 
-          regions r
+               departments d, 
+               locations l, 
+               countries c, 
+               regions r
           where e.department_id = d.department_id
           and d.location_id = l.location_id
           and l.country_id = c.country_id
           and c.region_id = r.region_id
           group by d.location_id, r.region_name
           order by mSalary desc)
-where rownum = 1);
+    where rownum = 1);
+
 
 /*문제10.
 평균 급여(salary)가 가장 높은 업무는?*/
