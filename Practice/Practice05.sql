@@ -68,8 +68,7 @@ and e.department_id = d.department_id(+);
 
 /*문제5.
 2005년 이후 입사한 직원중에 입사일이 11번째에서 20번째의 직원의 
-사번, 이름, 부서명, 급여, 입사일을 입사일 순서로 출력하세요*/     
-
+사번, 이름, 부서명, 급여, 입사일을 입사일 순서로 출력하세요*/
 select e.rn,
         e.employee_id,
         e.first_name,
@@ -98,6 +97,7 @@ order by rn asc ;
 
 /*문제6.
 가장 늦게 입사한 직원의 이름(first_name last_name)과 연봉(salary)과 근무하는 부서 이름(department_name)은?*/
+--방법1
 select e.first_name||' '||e.last_name, 
         e.salary, 
         d.department_name
@@ -107,9 +107,25 @@ from (select max(hire_date) mH from employees)s,
 where s.mH = e.hire_date
 and e.department_id = d.department_id;
 
+--방법2
+select e.first_name||' '||e.last_name, 
+        e.salary, 
+        d.department_name
+from employees e,
+     departments d
+where e.hire_date = (select hire_date
+                    from(select rownum rn,
+                                hire_date
+                            from (select hire_date
+                                  from employees
+                                  order by hire_date desc))
+                    where rn = 1)
+and d.department_id = e.department_id;
+ 
 /*문제7.
 평균연봉(salary)이 가장 높은 부서 직원들의 직원번호(employee_id), 이름(firt_name), 성(last_name)과  
 업무(job_title), 연봉(salary)을 조회하시오.*/
+--방법1
 select e.employee_id,
         e.last_name,
         e.first_name,
@@ -129,9 +145,26 @@ from employees e,
     jobs j
 where s.department_id = e.department_id
 and j.job_id = e.job_id;
-    
+
+
+--방법2
+select e.employee_id, e.last_name,e.first_name,e.salary,j.job_title
+from employees e, jobs j
+where j.job_id = e.job_id
+and e.department_id = (select department_id
+                       from(select rownum, department_id
+                            from(select department_id,
+                                 avg(salary) aSalary
+                                 from employees
+                                 group by department_id
+                                 order by aSalary desc)
+                        where rownum = 1));
+
+
+
 /*문제8.
 평균 급여(salary)가 가장 높은 부서는?*/
+--방법1
 select d.department_name
 from (select rownum,
             department_id,
@@ -145,31 +178,49 @@ from (select rownum,
     departments d
 where d.department_id = s.department_id;
 
+
+--방법2
+select department_name
+from departments 
+where department_id = (select department_id 
+                       from(select rownum,
+                                   department_id
+                            from(select department_id, 
+                                        avg(salary) mSalary
+                                from employees 
+                                group by department_id
+                                order by mSalary desc)
+                            where rownum = 1));
+
+
+
 /*문제9.
 평균 급여(salary)가 가장 높은 지역은?*/
-select rownum, region_name
-from (select  r.region_name region_name,
-            avg(e.salary) mSalary
-      from employees e, 
-            departments d, 
-            locations l, 
-            countries c, 
-            regions r
-        where e.department_id = d.department_id
-        and d.location_id = l.location_id
-        and l.country_id = c.country_id
-        and c.region_id = r.region_id
-        group by d.location_id, r.region_name
-        order by mSalary desc)
-where rownum = 1;
+select region_name
+from(select rownum, region_name
+    from (select  r.region_name region_name,
+                  avg(e.salary) mSalary
+          from employees e, 
+          departments d, 
+          locations l, 
+          countries c, 
+          regions r
+          where e.department_id = d.department_id
+          and d.location_id = l.location_id
+          and l.country_id = c.country_id
+          and c.region_id = r.region_id
+          group by d.location_id, r.region_name
+          order by mSalary desc)
+where rownum = 1);
 
 /*문제10.
 평균 급여(salary)가 가장 높은 업무는?*/
+--방법1
 select j.job_title
 from(select rownum,
             job_id     
     from(select job_id, 
-                        avg(salary) mSalary
+                avg(salary) mSalary
                 from employees 
                 group by job_id
                 order by mSalary desc)
@@ -177,5 +228,16 @@ from(select rownum,
         jobs j
 where j.job_id = e.job_id;
 
-select * from employees;
-
+--방법2
+select job_title
+from jobs
+where job_id = (select job_id
+                from(select rownum rn,
+                            job_id
+                     from(select job_id, 
+                                 avg(salary) salary
+                         from employees 
+                         group by job_id
+                         order by salary desc))
+                where rn = 1);
+        
