@@ -176,3 +176,6 @@ from(select rownum,
         where rownum = 1)e,
         jobs j
 where j.job_id = e.job_id;
+
+
+
