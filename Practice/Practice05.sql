@@ -69,8 +69,8 @@ and e.department_id = d.department_id(+);
 /*문제5.
 2005년 이후 입사한 직원중에 입사일이 11번째에서 20번째의 직원의 
 사번, 이름, 부서명, 급여, 입사일을 입사일 순서로 출력하세요*/
-select e.rn,
-        e.employee_id,
+--방법1
+select e.employee_id,
         e.first_name,
         d.department_name,
         e.salary,
@@ -94,6 +94,26 @@ where e.department_id = d.department_id
 and e.rn >=11 
 and e.rn <=20
 order by rn asc ;
+
+--방법2
+select e.employee_id,
+        e.first_name,
+        d.department_name,
+        e.salary,
+        e.hire_date
+from employees e, departments d
+where e.department_id = d.department_id
+and e.employee_id in(select employee_id
+                     from(select rownum rn,
+                                 employee_id
+                          from(select employee_id
+                               from employees
+                               where hire_date > '2004-12-31'
+                               order by hire_date asc))
+                    where rn >= 11
+                    and rn <= 20);
+
+
 
 /*문제6.
 가장 늦게 입사한 직원의 이름(first_name last_name)과 연봉(salary)과 근무하는 부서 이름(department_name)은?*/
