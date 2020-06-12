@@ -188,3 +188,5 @@ select b.book_id,
 from book b, author a
 where b.author_id = a.author_id(+)
 order by b.book_id asc;
+
+commit;
