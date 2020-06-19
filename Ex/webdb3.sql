@@ -60,7 +60,15 @@ select  bo.book_id,
 from book bo, author au 
 where bo.author_id(+) = au.author_id;
 
+create table guestBook(
+    name        varchar2(80),
+    password    varchar2(20),
+    content     varchar2(2000),
+    reg_date    date
+);
 
+insert into guestBook values('이정재', '1234', '첫번째 방명록 내용 안녕하소', sysdate);
+insert into guestBook values('이정재', '1234', '첫번째 방명록 내용 안녕하소', sysdate);
 
 
 
